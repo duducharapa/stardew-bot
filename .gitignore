@@ -1,0 +1,12 @@
+# Default language files
+/docs/
+/lib/
+/bin/
+/.shards/
+*.dwarf
+
+# IDE-specific files
+/.vscode/
+
+# Environment variables
+.env

@@ -1,0 +1,21 @@
+name: stardewbot
+version: 0.1.0
+
+authors:
+  - charapa <eduardocharapa@gmail.com>
+
+targets:
+  stardewbot:
+    main: src/stardewbot.cr
+
+dependencies:
+  discordcr:
+    github: shardlab/discordcr
+  sqlite3:
+    github: crystal-lang/crystal-sqlite3
+  dotenv:
+    github: xtokio/dotenv
+
+crystal: 1.6.2
+
+license: MIT
