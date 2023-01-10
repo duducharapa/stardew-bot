@@ -12,17 +12,17 @@ module StardewBot
 
       DB.open "sqlite3://data.db" do |db|
     
-        db.query "SELECT i.name, i.link, i.image,s.name AS source FROM items AS i
+        db.query "SELECT i.name, i.image, i.link, s.name FROM items AS i
         INNER JOIN items_sources AS itsc ON itsc.item_id = i.id
-        INNER JOIN sources AS s ON itsc.source_id = s.id WHERE i.name LIKE (?)", query do |rs|
+        INNER JOIN sources AS s ON itsc.source_id = s.id WHERE i.name LIKE ?", query do |rs|
           
           item = StardewBot::Item.new "", "", "", [] of String
           counter = 0
 
           rs.each do
             item.name = rs.read(String)
-            item.link = rs.read(String)
             item.image = rs.read(String)
+            item.link = rs.read(String)
             item.sources << rs.read(String)
           end
 
@@ -31,6 +31,8 @@ module StardewBot
         end
     
       end
+
+      puts item
 
       unless item.nil?
 
