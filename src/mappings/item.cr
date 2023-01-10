@@ -1,12 +1,21 @@
+require "db"
+
 module StardewBot
-  
-  struct Item
+
+  class Item
+    include DB::Serializable
+
+    property id : Int32
     property name : String
     property image : String
     property link : String
     property sources = [] of String
-  
-    def initialize(@name : String, @link : String, @image : String, @sources : Array(String))
+
+    def initialize()
+      @id = 0
+      @name = ""
+      @image = ""
+      @link = ""
     end
   end
 

@@ -1,6 +1,6 @@
 require "discordcr"
 
-require "./replier"
+require "./seeker"
 
 module StardewBot
   class Interpreter
@@ -9,8 +9,8 @@ module StardewBot
 
     WHITESPACE = " "
     PREFIX = "!"
-    
-    REPLIER = StardewBot::Replier.new
+
+    SEEKER = StardewBot::Seeker.new
 
     def initialize(@discord_client : Discord::Client)
     end
@@ -37,9 +37,10 @@ module StardewBot
     def resolve_command(command : String, search : String, channel_id : Discord::Snowflake)
       case command
       when "find"
-        embed_message = REPLIER.searchItem(search.downcase)
+        item = SEEKER.find_item(search.downcase)
 
-        unless embed_message.nil?
+        unless item.nil?
+          embed_message = mount_embed_message(item)
           reply(embed_message, channel_id)
         else
           error_message = "Item **#{search}** não encontrado!"
@@ -47,6 +48,35 @@ module StardewBot
         end
       end
     end
-  
+
+    def mount_embed_message(item : StardewBot::Item) : Discord::Embed
+      sources = translate_sources(item.sources)
+
+      embed = Discord::Embed.new(
+        title: item.name,
+        image: Discord::EmbedImage.new(url: item.image),
+        fields: [
+          Discord::EmbedField.new(name: "Fontes", value: sources),
+          Discord::EmbedField.new(name: "Wiki link", value: item.link)
+        ]
+      )
+
+      embed
+    end
+
+    def translate_sources(sources : Array(String)) : String
+      joined_sources = ""
+
+      unless sources == [] of String
+        sources.each do |source|
+          joined_sources = joined_sources.insert(-1, "> #{source}\n")
+        end
+      else
+        return "Fontes desconhecidas"
+      end
+
+      joined_sources
+    end
+
   end
 end
